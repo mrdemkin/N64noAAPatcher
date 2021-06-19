@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31129.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "N64noAAPatcher", "N64noAAPatcher.csproj", "{FDE5B870-7133-40C9-A0F9-D3723FBD1FE5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FDE5B870-7133-40C9-A0F9-D3723FBD1FE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDE5B870-7133-40C9-A0F9-D3723FBD1FE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDE5B870-7133-40C9-A0F9-D3723FBD1FE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDE5B870-7133-40C9-A0F9-D3723FBD1FE5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F7B790E2-69E4-430E-8BFC-BB9947B88C28}
+	EndGlobalSection
+EndGlobal
