@@ -21,24 +21,42 @@ namespace N64noAAPatcher
         public bool isRunning;
 
         public Action OnFilesListChanged;
-        private Queue<string> filesToPatch;
+        //private Queue<string> filesToPatch;
+        //for removing any items
+        private List<string> filesToPatch;
         public PatchMachine() {
-            filesToPatch = new Queue<string>();
+            filesToPatch = new List<string>();
         }
 
         public void AddFileToPatch(string path)
         {
             //if file exists
-            filesToPatch.Enqueue(path);
+            filesToPatch.Add(path);
+            OnFilesListChanged?.Invoke();
+        }
+
+        public void RemoveFileFromPatch(string path)
+        {
+            //if file exists
+            filesToPatch.Remove(path);
+            OnFilesListChanged?.Invoke();
+        }
+
+        public void RemoveFileFromPatch(int index)
+        {
+            //if file exists
+            filesToPatch.RemoveAt(index);
             OnFilesListChanged?.Invoke();
         }
 
         public string GetNext()
         {
-            return filesToPatch.Dequeue();
+            var value = filesToPatch.First();
+            filesToPatch.RemoveAt(0);
+            return value;
         }
 
-        public Queue<string> GetFilesToPatch()
+        public List<string> GetFilesToPatch()
         {
             return this.filesToPatch;
         }

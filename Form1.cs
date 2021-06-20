@@ -125,6 +125,14 @@ namespace N64noAAPatcher
             }
 
             filesListView.Items.AddRange(lItems);
+            /*if (filesListView.Items.Count > 0)
+            {
+                UnlockRemoveUI();
+            }
+            else
+            {
+                LockRemoveUI();
+            }*/
         }
 
         private void SetActiveStartBtn()
@@ -133,6 +141,7 @@ namespace N64noAAPatcher
             this.Start.Enabled = pMachine.GetFilesToPatch().Count > 0;
         }
 
+        short progressCounter;
         private void StartJob()
         {
             if (isStarted)
@@ -153,6 +162,10 @@ namespace N64noAAPatcher
                     MessageBox.Show("Output path is incorrect or empty.");
                     return;
                 }
+                progressCounter = (short)pMachine.GetFilesToPatch().Count;
+                mainProgressBar.Maximum = progressCounter;
+                mainProgressBar.Minimum = 0;
+                mainProgressBar.Value = 0;
                 this.isStarted = !this.isStarted;
                 LockUI();
                 N64 converter = new N64();
@@ -170,10 +183,11 @@ namespace N64noAAPatcher
                         pMachine.StartCmdProcess(CmdAppType.CRC, $"\"{this.outputPath.Text}\\{Path.GetFileNameWithoutExtension(path)}_noAA.z64\"");
                         //pMachine.StartCmdProcess($"--df-off -i \"{newOutputPath}\" -o \"{this.outputPath.Text}\\{Path.GetFileNameWithoutExtension(path)}_noAA.z64\"");
                     }
+                    mainProgressBar.Value = progressCounter - pMachine.GetFilesToPatch().Count;
                     FillTableFiles();
                 }
                 RemoveLastFile(newOutputPath);
-                UnlockUI();
+                SoftResetAppState();
             }
             /*foreach (var path in pMachine.GetFilesToPatch())
             {
@@ -192,9 +206,9 @@ namespace N64noAAPatcher
         private void RemoveFromList(object sender, EventArgs e)
         {
             if (pMachine.GetFilesToPatch().Count == 0) return;
-            foreach (ListView.SelectedIndexCollection lview in filesListView.SelectedIndices)
+            foreach (var lview in filesListView.SelectedIndices)
             {
-               // lview.
+                pMachine.RemoveFileFromPatch((int)lview);
             }
         }
 
@@ -218,6 +232,28 @@ namespace N64noAAPatcher
             RemoveFromListBtn.Enabled = true;
             Start.Text = "Start";
             needDoJob = true;
+        }
+
+        private void LockRemoveUI()
+        {
+            RemoveFromListBtn.Enabled = false;
+        }
+
+        public void UnlockRemoveUI()
+        {
+            RemoveFromListBtn.Enabled = true;
+        }
+
+        private void SoftResetAppState()
+        {
+            needDoJob = true;
+            mainProgressBar.Value = 0;
+            UnlockUI();
+        }
+
+        private void HardResetAppState()
+        {
+            //SoftResetAppState();
         }
 
         private void Form1_Load(object sender, EventArgs e)
