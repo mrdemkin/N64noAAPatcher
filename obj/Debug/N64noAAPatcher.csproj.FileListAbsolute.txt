@@ -1,0 +1,10 @@
+E:\Projects\git\N64noAAPatcher\bin\Debug\N64noAAPatcher.exe.config
+E:\Projects\git\N64noAAPatcher\bin\Debug\N64noAAPatcher.exe
+E:\Projects\git\N64noAAPatcher\bin\Debug\N64noAAPatcher.pdb
+E:\Projects\git\N64noAAPatcher\obj\Debug\N64noAAPatcher.csprojAssemblyReference.cache
+E:\Projects\git\N64noAAPatcher\obj\Debug\N64noAAPatcher.Form1.resources
+E:\Projects\git\N64noAAPatcher\obj\Debug\N64noAAPatcher.Properties.Resources.resources
+E:\Projects\git\N64noAAPatcher\obj\Debug\N64noAAPatcher.csproj.GenerateResource.cache
+E:\Projects\git\N64noAAPatcher\obj\Debug\N64noAAPatcher.csproj.CoreCompileInputs.cache
+E:\Projects\git\N64noAAPatcher\obj\Debug\N64noAAPatcher.exe
+E:\Projects\git\N64noAAPatcher\obj\Debug\N64noAAPatcher.pdb
