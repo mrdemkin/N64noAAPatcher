@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 
 namespace N64noAAPatcher
 {
+    enum CmdAppType
+    {
+        Patcher, CRC
+    }
+
     class PatchMachine
     {
         static System.Diagnostics.Process cmdProcess;
@@ -38,8 +43,51 @@ namespace N64noAAPatcher
             return this.filesToPatch;
         }
 
-        public void StartCmdProcess(string strCmdText)
+        public void StartCmdProcess(CmdAppType cmdType, string strCmdText)
         {
+            switch (cmdType)
+            {
+                case CmdAppType.Patcher:
+                    StartConvertCmd(strCmdText);
+                    break;
+                case CmdAppType.CRC:
+                    StartCrcCmd(strCmdText);
+                    break;
+            }
+        }
+
+        private void StartCmdProcess(string arguments)
+        {
+            try
+            {
+                if (cmdProcess != null) StopCmdProcess();
+                cmdProcess = new System.Diagnostics.Process();
+                cmdProcess.StartInfo.FileName = "CMD.exe";
+                cmdProcess.StartInfo.Arguments = arguments;
+                cmdProcess.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Minimized;
+                if (cmdProcess.Start())
+                {
+                    cmdHandle = cmdProcess.SafeHandle;
+                    isRunning = true;
+                }
+                cmdProcess.WaitForExit(4000);
+                StopCmdProcess();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        private void StartCrcCmd(string strCmdText)
+        {
+            StartCmdProcess($"/k cd {Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location)}\\additionals && rn64crc.exe {strCmdText} -u");
+        }
+
+        private void StartConvertCmd(string strCmdText)
+        {
+            StartCmdProcess($"/k cd {Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location)}\\additionals && u64aap.exe --df-off {strCmdText}");
+            return;
             try
             {
                 if (cmdProcess != null) StopCmdProcess();
@@ -52,7 +100,7 @@ namespace N64noAAPatcher
                     cmdHandle = cmdProcess.SafeHandle;
                     isRunning = true;
                 }
-                cmdProcess.WaitForExit(11000);
+                cmdProcess.WaitForExit(6000);
                 StopCmdProcess();
             }
             catch (Exception e)

@@ -35,6 +35,9 @@ namespace N64noAAPatcher
             this.filesListView = new System.Windows.Forms.ListView();
             this.Start = new System.Windows.Forms.Button();
             this.RemoveFromListBtn = new System.Windows.Forms.Button();
+            this.AddDirBtn = new System.Windows.Forms.Button();
+            this.outputPathLabel = new System.Windows.Forms.Label();
+            this.FilesTableLable = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // addFileBtn
@@ -44,12 +47,13 @@ namespace N64noAAPatcher
             this.addFileBtn.Name = "addFileBtn";
             this.addFileBtn.Size = new System.Drawing.Size(75, 23);
             this.addFileBtn.TabIndex = 0;
-            this.addFileBtn.Text = "Add file...";
+            this.addFileBtn.Text = "Add file";
             this.addFileBtn.UseVisualStyleBackColor = true;
             this.addFileBtn.Click += new System.EventHandler(this.addFileBtn_Click);
             // 
             // chooseOutputBtn
             // 
+            this.chooseOutputBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chooseOutputBtn.Location = new System.Drawing.Point(583, 41);
             this.chooseOutputBtn.Name = "chooseOutputBtn";
             this.chooseOutputBtn.Size = new System.Drawing.Size(75, 23);
@@ -69,15 +73,16 @@ namespace N64noAAPatcher
             // 
             this.filesListView.HideSelection = false;
             this.filesListView.Location = new System.Drawing.Point(42, 98);
+            this.filesListView.MultiSelect = false;
             this.filesListView.Name = "filesListView";
             this.filesListView.Size = new System.Drawing.Size(529, 199);
             this.filesListView.TabIndex = 3;
-            this.filesListView.MultiSelect = false;
             this.filesListView.UseCompatibleStateImageBehavior = false;
             this.filesListView.View = System.Windows.Forms.View.List;
             // 
             // Start
             // 
+            this.Start.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Start.Location = new System.Drawing.Point(583, 303);
             this.Start.Name = "Start";
             this.Start.Size = new System.Drawing.Size(75, 23);
@@ -96,19 +101,54 @@ namespace N64noAAPatcher
             this.RemoveFromListBtn.Text = "Remove";
             this.RemoveFromListBtn.UseVisualStyleBackColor = true;
             // 
+            // AddDirBtn
+            // 
+            this.AddDirBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.AddDirBtn.Location = new System.Drawing.Point(492, 12);
+            this.AddDirBtn.Name = "AddDirBtn";
+            this.AddDirBtn.Size = new System.Drawing.Size(79, 23);
+            this.AddDirBtn.TabIndex = 6;
+            this.AddDirBtn.Text = "Add directory";
+            this.AddDirBtn.UseVisualStyleBackColor = true;
+            this.AddDirBtn.Click += new System.EventHandler(this.AddDirBtn_Click);
+            // 
+            // outputPathLabel
+            // 
+            this.outputPathLabel.AutoSize = true;
+            this.outputPathLabel.Location = new System.Drawing.Point(42, 25);
+            this.outputPathLabel.Name = "outputPathLabel";
+            this.outputPathLabel.Size = new System.Drawing.Size(66, 13);
+            this.outputPathLabel.TabIndex = 7;
+            this.outputPathLabel.Text = "Output path:";
+            // 
+            // FilesTableLable
+            // 
+            this.FilesTableLable.AutoSize = true;
+            this.FilesTableLable.Location = new System.Drawing.Point(42, 79);
+            this.FilesTableLable.Name = "FilesTableLable";
+            this.FilesTableLable.Size = new System.Drawing.Size(83, 13);
+            this.FilesTableLable.TabIndex = 8;
+            this.FilesTableLable.Text = "Files to process:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(669, 334);
+            this.Controls.Add(this.FilesTableLable);
+            this.Controls.Add(this.outputPathLabel);
+            this.Controls.Add(this.AddDirBtn);
             this.Controls.Add(this.RemoveFromListBtn);
             this.Controls.Add(this.Start);
             this.Controls.Add(this.filesListView);
             this.Controls.Add(this.outputPath);
             this.Controls.Add(this.chooseOutputBtn);
             this.Controls.Add(this.addFileBtn);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "N64noAAPatcher v0.1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -122,6 +162,9 @@ namespace N64noAAPatcher
         private System.Windows.Forms.ListView filesListView;
         private System.Windows.Forms.Button Start;
         private System.Windows.Forms.Button RemoveFromListBtn;
+        private System.Windows.Forms.Button AddDirBtn;
+        private System.Windows.Forms.Label outputPathLabel;
+        private System.Windows.Forms.Label FilesTableLable;
     }
 }
 

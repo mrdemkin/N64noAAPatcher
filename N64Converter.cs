@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace RomConverter
@@ -16,17 +17,23 @@ namespace RomConverter
 
         private RomType GetRomFormat(string romHeader)
         {
+            Console.WriteLine($"GetRomFormat: {romHeader}");
             switch (romHeader)
             {
                 case "40-12-37-80":
                     return RomType.n64;
                 case "80-37-12-40":
                     return RomType.z64;
-                case "37-80-40-1":
+                case "37-80-40-12":
                     return RomType.v64;
                 default:
                     return RomType.Unknown;
             }
+        }
+
+        private byte[] ReadFullBytes(string inputFilePath)
+        {
+            return File.ReadAllBytes(inputFilePath);
         }
 
         private byte[] ReadFirstBytes(string inputFilePath, short bytesCount)
@@ -58,11 +65,12 @@ namespace RomConverter
             bool result = true;
             try
             {
-                using (FileStream fs = new FileStream(outputPathFile, FileMode.OpenOrCreate, FileAccess.Write))
+                File.WriteAllBytes(outputPathFile, bytes);
+                /*using (FileStream fs = new FileStream(outputPathFile, FileMode.OpenOrCreate, FileAccess.Write))
                 {
                     fs.Write(bytes, 0, bytes.Length);
                     fs.Close();
-                }
+                }*/
             }
             catch (System.Exception ex)
             {
@@ -86,10 +94,10 @@ namespace RomConverter
 
         private byte[] SwapWord(byte[] bytes, int a, int b)
         {
-            //byte temp = bytes[a];
-            //bytes[a] = bytes[b];
-            //bytes[b] = temp;
-            (bytes[a], bytes[b]) = (bytes[b], bytes[a]);
+            byte temp = bytes[a];
+            bytes[a] = bytes[b];
+            bytes[b] = temp;
+            //(bytes[a], bytes[b]) = (bytes[b], bytes[a]);
 
             return bytes;
         }
@@ -109,13 +117,16 @@ namespace RomConverter
             return bytes;
         }
 
-        public bool Convert(string inputPath, string outputPath)
+        public bool Convert(string inputPath, string outputFilePath)
         {
             //check path
             //check rom format
             try
             {
+                byte[] fullBytes = ReadFullBytes(inputPath);
                 byte[] bytes = ReadFirstBytes(inputPath, 4);
+                Console.WriteLine($"FULL: {fullBytes[0]}:{fullBytes[1]}:{fullBytes[2]}:{fullBytes[3]}");
+                Console.WriteLine($"NOFU: {bytes[0]}:{bytes[1]}:{bytes[2]}:{bytes[3]}");
                 if (bytes == null)
                 {
                     //unable to read file for some reason or file is shoter than 4 bytes
@@ -131,13 +142,14 @@ namespace RomConverter
                         //just copy file rom
                         break;
                     case RomType.n64:
-                        bytes = SwapWordD(bytes);
+                        fullBytes = SwapWordD(fullBytes);
                         break;
                     case RomType.v64:
-                        bytes = SwapWord(bytes);
+                        fullBytes = SwapWord(fullBytes);
                         break;
                 }
-                return WriteBytesToPath(Path.Combine(outputPath, $"{Path.GetFileNameWithoutExtension(inputPath)}_noAA.z64"), bytes);
+                //return WriteBytesToPath(Path.Combine(outputPath, $"{Path.GetFileNameWithoutExtension(inputPath)}_temp.z64"), bytes);
+                return WriteBytesToPath(outputFilePath, fullBytes);
             }
             catch (System.Exception e)
             {

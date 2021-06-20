@@ -8,12 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using RomConverter;
 
 namespace N64noAAPatcher
 {
     public partial class Form1 : Form
     {
-        bool isStarted;
+        bool isStarted, needDoJob;
         string lastAddFilePath;
         PatchMachine pMachine;
         public Form1()
@@ -33,6 +34,7 @@ namespace N64noAAPatcher
                 MessageBox.Show($"u64aap not found at path: {Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "additionals\\u64aap.exe")}");
                 return false;
             }
+            this.needDoJob = true;
             this.isStarted = false;
             this.lastAddFilePath = string.Empty;
             InitializeComponent();
@@ -133,9 +135,10 @@ namespace N64noAAPatcher
 
         private void StartJob()
         {
-            if (!isStarted)
+            if (isStarted)
             {
                 this.isStarted = !this.isStarted;
+                needDoJob = false;
                 //TODO: STOP PROCESS
             }
             else
@@ -152,20 +155,38 @@ namespace N64noAAPatcher
                 }
                 this.isStarted = !this.isStarted;
                 LockUI();
-                while (pMachine.GetFilesToPatch().Count > 0)
+                N64 converter = new N64();
+                string baseTempPath = outputPath.Text;
+                string newOutputPath = string.Empty;
+                while (pMachine.GetFilesToPatch().Count > 0 && needDoJob)
                 {
                     if (!pMachine.isRunning)
                     {
+                        RemoveLastFile(newOutputPath);
                         string path = pMachine.GetNext();
-                        pMachine.StartCmdProcess($"--df-off -i {path} -o {this.outputPath.Text}\\{Path.GetFileNameWithoutExtension(path)}_noAA.z64");
+                        newOutputPath = Path.Combine(baseTempPath, $"{Path.GetFileNameWithoutExtension(path)}_temp.z64");
+                        converter.Convert(path, newOutputPath);
+                        pMachine.StartCmdProcess(CmdAppType.Patcher, $"-i \"{newOutputPath}\" -o \"{this.outputPath.Text}\\{Path.GetFileNameWithoutExtension(path)}_noAA.z64\"");
+                        pMachine.StartCmdProcess(CmdAppType.CRC, $"\"{this.outputPath.Text}\\{Path.GetFileNameWithoutExtension(path)}_noAA.z64\"");
+                        //pMachine.StartCmdProcess($"--df-off -i \"{newOutputPath}\" -o \"{this.outputPath.Text}\\{Path.GetFileNameWithoutExtension(path)}_noAA.z64\"");
                     }
+                    FillTableFiles();
                 }
+                RemoveLastFile(newOutputPath);
                 UnlockUI();
             }
             /*foreach (var path in pMachine.GetFilesToPatch())
             {
                 pMachine.StartCmdProcess($"--df-off -i {path} -o {this.outputPath.Text}\\{Path.GetFileNameWithoutExtension(path)}_noAA.z64");
             }*/
+        }
+
+        private void RemoveLastFile(string filePAth)
+        {
+            if (File.Exists(filePAth))
+            {
+                File.Delete(filePAth);
+            }
         }
 
         private void RemoveFromList(object sender, EventArgs e)
@@ -179,6 +200,7 @@ namespace N64noAAPatcher
 
         private void LockUI()
         {
+            AddDirBtn.Enabled = false;
             outputPath.Enabled = false;
             addFileBtn.Enabled = false;
             chooseOutputBtn.Enabled = false;
@@ -189,11 +211,37 @@ namespace N64noAAPatcher
 
         private void UnlockUI()
         {
+            AddDirBtn.Enabled = true;
             outputPath.Enabled = true;
             addFileBtn.Enabled = true;
             chooseOutputBtn.Enabled = true;
             RemoveFromListBtn.Enabled = true;
             Start.Text = "Start";
+            needDoJob = true;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void AddDirBtn_Click(object sender, EventArgs e)
+        {
+            string pathForSearch = chooseOutputPathDialog();
+            //TODO: make this with search pattern
+            var tempArray = Directory.GetFiles(pathForSearch, "*.z64", SearchOption.AllDirectories);
+            List<string> filesPathes = new List<string>();
+            filesPathes.AddRange(tempArray);
+            tempArray = Directory.GetFiles(pathForSearch, "*.v64", SearchOption.AllDirectories);
+            filesPathes.AddRange(tempArray);
+            tempArray = Directory.GetFiles(pathForSearch, "*.n64", SearchOption.AllDirectories);
+            filesPathes.AddRange(tempArray);
+
+            foreach (var path in filesPathes)
+            {
+                pMachine.AddFileToPatch(path);
+            }
+            filesPathes.Clear();
         }
     }
 }
