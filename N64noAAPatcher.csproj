@@ -54,6 +54,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IRomConverter.cs" />
+    <Compile Include="LinkedList.cs" />
     <Compile Include="N64Converter.cs" />
     <Compile Include="PatchMachine.cs" />
     <Compile Include="Program.cs" />

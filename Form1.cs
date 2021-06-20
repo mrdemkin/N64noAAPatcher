@@ -34,6 +34,11 @@ namespace N64noAAPatcher
                 MessageBox.Show($"u64aap not found at path: {Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "additionals\\u64aap.exe")}");
                 return false;
             }
+            if (!File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "additionals\\rn64crc.exe")))
+            {
+                MessageBox.Show($"rn64crc not found at path: {Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "additionals\\rn64crc.exe")}");
+                return false;
+            }
             this.needDoJob = true;
             this.isStarted = false;
             this.lastAddFilePath = string.Empty;
@@ -246,6 +251,7 @@ namespace N64noAAPatcher
 
         private void SoftResetAppState()
         {
+            this.isStarted = false;
             needDoJob = true;
             mainProgressBar.Value = 0;
             UnlockUI();

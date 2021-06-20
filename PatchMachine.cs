@@ -82,7 +82,7 @@ namespace N64noAAPatcher
                 cmdProcess = new System.Diagnostics.Process();
                 cmdProcess.StartInfo.FileName = "CMD.exe";
                 cmdProcess.StartInfo.Arguments = arguments;
-                cmdProcess.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Minimized;
+                cmdProcess.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 if (cmdProcess.Start())
                 {
                     cmdHandle = cmdProcess.SafeHandle;
